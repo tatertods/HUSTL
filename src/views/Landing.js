@@ -61,6 +61,14 @@ const VerifyCard = ({ user, profile, onProfileSaved, go, signOut }) => {
     setBusy(false);
     if (err) setError('That email or tester code is not right.');
   };
+  const demoEmail = import.meta.env.VITE_DEMO_EMAIL;
+  const demoPass = import.meta.env.VITE_DEMO_PASSWORD;
+  const skip = async () => {
+    setBusy(true); setError('');
+    const { error: err } = await supabase.auth.signInWithPassword({ email: demoEmail, password: demoPass });
+    setBusy(false);
+    if (err) setError('Demo account is not set up yet.');
+  };
   const confirm = async e => {
     e.preventDefault();
     if (code.trim().length < 6) { setError('Enter the 6 digit code from your email.'); return; }
@@ -104,7 +112,9 @@ const VerifyCard = ({ user, profile, onProfileSaved, go, signOut }) => {
             h('input', { className: 'input', type: 'email', inputMode: 'email', autoComplete: 'email', placeholder: 'you@campus.edu', value: email, 'aria-label': 'Campus email', 'aria-invalid': error ? 'true' : undefined, onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
             h('button', { className: 'btn btn-grad', type: 'submit', disabled: busy }, busy ? 'Sending...' : 'Send code', busy ? null : h(Icon, { name: 'arrow' }))),
           error ? h('p', { className: 'err', role: 'alert' }, error) : h('p', { className: 'hint' }, 'Campus email addresses only during the pilot.'),
-          h('button', { type: 'button', className: 'replay', onClick: () => { setMode('test'); setError(''); setCode(''); } }, 'Tester access'))
+          h('div', { style: { display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' } },
+            h('button', { type: 'button', className: 'replay', onClick: () => { setMode('test'); setError(''); setCode(''); } }, 'Tester access'),
+            demoEmail && demoPass ? h('button', { type: 'button', className: 'btn btn-ghost', disabled: busy, onClick: skip }, busy ? 'Opening...' : 'Skip verification (demo)') : null))
       : h('form', { onSubmit: confirm, noValidate: true },
           h('h3', null, 'Enter your 6 digit code'),
           h('p', { className: 'sub' }, `We sent it to ${clean}. Check spam if it does not show up.`),
