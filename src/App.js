@@ -105,7 +105,7 @@ export const App = () => {
       setSelectedId(t.id);
       toast('Task published to the feed');
       go('messages');
-    } catch (err) { toast('Could not publish. Try again.'); }
+    } catch (err) { console.error(err); toast('Could not publish: ' + ((err && err.message) || 'unknown error')); }
   };
   const signOut = async () => { if (supabase) await supabase.auth.signOut(); toast('Signed out'); go('home'); };
 

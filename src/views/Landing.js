@@ -51,6 +51,16 @@ const VerifyCard = ({ user, profile, onProfileSaved, go, signOut }) => {
     if (err) { setError(authMessage(err)); return; }
     setMode('code'); setCode('');
   };
+  const testLogin = async e => {
+    e.preventDefault();
+    const msg = checkEmail(email);
+    if (msg) { setError(msg); return; }
+    if (!code.trim()) { setError('Enter the tester code.'); return; }
+    setBusy(true);
+    const { error: err } = await supabase.auth.signInWithPassword({ email: clean, password: code.trim() });
+    setBusy(false);
+    if (err) setError('That email or tester code is not right.');
+  };
   const confirm = async e => {
     e.preventDefault();
     if (code.trim().length < 6) { setError('Enter the 6 digit code from your email.'); return; }
@@ -76,14 +86,25 @@ const VerifyCard = ({ user, profile, onProfileSaved, go, signOut }) => {
       h('button', { type: 'button', className: 'replay', onClick: signOut }, 'Sign out'));
   }
   return h('div', { className: 'verify-card rise', style: { '--i': 4 } },
-    mode === 'email'
+    mode === 'test'
+      ? h('form', { onSubmit: testLogin, noValidate: true },
+          h('h3', null, 'Tester access'),
+          h('p', { className: 'sub' }, 'For approved testers only. Use the email and tester code you were given.'),
+          h('div', { className: 'fieldrow' },
+            h('input', { className: 'input', type: 'email', autoComplete: 'email', placeholder: 'tester@iu.edu', value: email, 'aria-label': 'Tester email', onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
+            h('input', { className: 'input', type: 'password', autoComplete: 'current-password', placeholder: 'Tester code', value: code, 'aria-label': 'Tester code', onChange: e => { setCode(e.target.value); if (error) setError(''); } }),
+            h('button', { className: 'btn btn-grad', type: 'submit', disabled: busy }, busy ? 'Checking...' : 'Enter', busy ? null : h(Icon, { name: 'check' }))),
+          error ? h('p', { className: 'err', role: 'alert' }, error) : null,
+          h('button', { type: 'button', className: 'replay', onClick: () => { setMode('email'); setError(''); setCode(''); } }, 'Back to email code'))
+    : mode === 'email'
       ? h('form', { onSubmit: send, noValidate: true },
           h('h3', null, 'Verify you are an IU student'),
           h('p', { className: 'sub' }, 'Use your campus email. Only verified students can post and accept tasks.'),
           h('div', { className: 'fieldrow' },
             h('input', { className: 'input', type: 'email', inputMode: 'email', autoComplete: 'email', placeholder: 'you@iu.edu', value: email, 'aria-label': 'Campus email', 'aria-invalid': error ? 'true' : undefined, onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
             h('button', { className: 'btn btn-grad', type: 'submit', disabled: busy }, busy ? 'Sending...' : 'Send code', busy ? null : h(Icon, { name: 'arrow' }))),
-          error ? h('p', { className: 'err', role: 'alert' }, error) : h('p', { className: 'hint' }, 'Accepted: @iu.edu addresses during the Bloomington pilot.'))
+          error ? h('p', { className: 'err', role: 'alert' }, error) : h('p', { className: 'hint' }, 'Accepted: @iu.edu addresses during the Bloomington pilot.'),
+          h('button', { type: 'button', className: 'replay', onClick: () => { setMode('test'); setError(''); setCode(''); } }, 'Tester access'))
       : h('form', { onSubmit: confirm, noValidate: true },
           h('h3', null, 'Enter your 6 digit code'),
           h('p', { className: 'sub' }, `We sent it to ${clean}. Check spam if it does not show up.`),
