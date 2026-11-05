@@ -1,6 +1,6 @@
 # Hustl.
 
-Verified campus task marketplace for IU students. Vite + React front end, Supabase backend (auth, database, realtime), deployed free on Vercel.
+Verified campus task marketplace for college students. Vite + React front end, Supabase backend (auth, database, realtime), deployed free on Vercel.
 
 Everything below is free. Do the parts in order.
 

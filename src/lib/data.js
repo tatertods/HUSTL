@@ -11,7 +11,7 @@ export const CATS = {
 };
 export const CAT_ORDER = ['errands', 'movein', 'tutoring', 'pickup', 'odd'];
 export const POST_ORDER = ['pickup', 'errands', 'movein', 'tutoring', 'odd'];
-export const LOCATIONS = ['Wright Quad', 'SRSC', 'Wells Library', 'Indiana Memorial Union', 'Briscoe Quad', 'Luddy Hall', 'Kelley School of Business', 'Union Street Apartments'];
+export const LOCATIONS = ['Central Residence Hall', 'Student Rec Center', 'Main Library', 'Student Union', 'West Residence Hall', 'Engineering Hall', 'Business School', 'College Street Apartments'];
 export const DEADLINES = ['Within 1 hour', 'Today, 5:00 PM', 'Today, 8:00 PM', 'Tomorrow, 9:00 AM', 'Tomorrow, 6:00 PM', 'This weekend'];
 export const STEPS = ['Requested', 'Accepted', 'In Progress', 'Completed'];
 export const STATUS_STEP = { open: 0, requested: 0, accepted: 1, in_progress: 2, completed: 3 };
@@ -28,13 +28,13 @@ export const checkEmail = value => {
   if (!e) return 'Enter your campus email to continue.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return 'That does not look like an email address yet.';
   if (!e.endsWith('.edu')) return 'Hustl. needs a .edu campus email to keep the marketplace verified.';
-  if (!/@(.+\.)?iu\.edu$/.test(e)) return 'The pilot is open to Indiana University only. Use your @iu.edu address.';
+  if (!/@(.+\.)?iu\.edu$/.test(e)) return 'The pilot is limited to approved campus emails. Use your campus email address.';
   return '';
 };
 export const nameFrom = email => {
   const local = String(email || '').split('@')[0].replace(/[0-9]+/g, '');
   const parts = local.split(/[._-]+/).filter(Boolean);
-  if (!parts.length) return 'Hoosier';
+  if (!parts.length) return 'Student';
   return parts.map(p => p[0].toUpperCase() + p.slice(1)).join(' ');
 };
 export const timeAgo = iso => {
@@ -56,8 +56,8 @@ export const rowToTask = r => ({
   dist: null,
   deadline: r.deadline || '',
   pay: Number(r.pay),
-  poster: r.poster_name || (r.poster && r.poster.full_name) || 'IU student',
-  worker: (r.worker && r.worker.full_name) || (r.worker_id ? 'IU student' : ''),
+  poster: r.poster_name || (r.poster && r.poster.full_name) || 'Student',
+  worker: (r.worker && r.worker.full_name) || (r.worker_id ? 'Student' : ''),
   posterId: r.poster_id,
   workerId: r.worker_id,
   status: r.status,

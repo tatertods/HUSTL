@@ -10,7 +10,7 @@ import { api } from '../lib/data.js';
 const authMessage = error => {
   const msg = String((error && error.message) || '').toLowerCase();
   if (error && error.status === 429 || msg.includes('rate limit') || msg.includes('too many')) return 'Too many tries. Wait a minute and request a new code.';
-  if (msg.includes('database error') || msg.includes('iu.edu')) return 'Only @iu.edu addresses can join Hustl.';
+  if (msg.includes('database error') || msg.includes('iu.edu')) return 'That email is not eligible to join yet. Use your campus email.';
   return 'We could not send the code. Check the address and try again in a minute.';
 };
 
@@ -91,19 +91,19 @@ const VerifyCard = ({ user, profile, onProfileSaved, go, signOut }) => {
           h('h3', null, 'Tester access'),
           h('p', { className: 'sub' }, 'For approved testers only. Use the email and tester code you were given.'),
           h('div', { className: 'fieldrow' },
-            h('input', { className: 'input', type: 'email', autoComplete: 'email', placeholder: 'tester@iu.edu', value: email, 'aria-label': 'Tester email', onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
+            h('input', { className: 'input', type: 'email', autoComplete: 'email', placeholder: 'tester@campus.edu', value: email, 'aria-label': 'Tester email', onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
             h('input', { className: 'input', type: 'password', autoComplete: 'current-password', placeholder: 'Tester code', value: code, 'aria-label': 'Tester code', onChange: e => { setCode(e.target.value); if (error) setError(''); } }),
             h('button', { className: 'btn btn-grad', type: 'submit', disabled: busy }, busy ? 'Checking...' : 'Enter', busy ? null : h(Icon, { name: 'check' }))),
           error ? h('p', { className: 'err', role: 'alert' }, error) : null,
           h('button', { type: 'button', className: 'replay', onClick: () => { setMode('email'); setError(''); setCode(''); } }, 'Back to email code'))
     : mode === 'email'
       ? h('form', { onSubmit: send, noValidate: true },
-          h('h3', null, 'Verify you are an IU student'),
+          h('h3', null, 'Verify you are a student'),
           h('p', { className: 'sub' }, 'Use your campus email. Only verified students can post and accept tasks.'),
           h('div', { className: 'fieldrow' },
-            h('input', { className: 'input', type: 'email', inputMode: 'email', autoComplete: 'email', placeholder: 'you@iu.edu', value: email, 'aria-label': 'Campus email', 'aria-invalid': error ? 'true' : undefined, onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
+            h('input', { className: 'input', type: 'email', inputMode: 'email', autoComplete: 'email', placeholder: 'you@campus.edu', value: email, 'aria-label': 'Campus email', 'aria-invalid': error ? 'true' : undefined, onChange: e => { setEmail(e.target.value); if (error) setError(''); } }),
             h('button', { className: 'btn btn-grad', type: 'submit', disabled: busy }, busy ? 'Sending...' : 'Send code', busy ? null : h(Icon, { name: 'arrow' }))),
-          error ? h('p', { className: 'err', role: 'alert' }, error) : h('p', { className: 'hint' }, 'Accepted: @iu.edu addresses during the Bloomington pilot.'),
+          error ? h('p', { className: 'err', role: 'alert' }, error) : h('p', { className: 'hint' }, 'Campus email addresses only during the pilot.'),
           h('button', { type: 'button', className: 'replay', onClick: () => { setMode('test'); setError(''); setCode(''); } }, 'Tester access'))
       : h('form', { onSubmit: confirm, noValidate: true },
           h('h3', null, 'Enter your 6 digit code'),
@@ -119,13 +119,13 @@ const VerifyCard = ({ user, profile, onProfileSaved, go, signOut }) => {
 
 export const Landing = ({ user, profile, onProfileSaved, go, signOut }) => {
   const secure = [
-    ['mail', 'Campus email only', 'Every account is tied to a working @iu.edu address.'],
+    ['mail', 'Campus email only', 'Every account is tied to a working campus email address.'],
     ['badge', 'Verified badges', 'Requesters and workers carry a visible student badge.'],
     ['lock', 'Protected payment', 'The task fee is tracked in escrow until the task is marked complete.'],
     ['clock', 'Clear terms upfront', 'Pay, place and deadline are shown before anyone accepts.']
   ];
   const mvp = [
-    ['01', 'Campus email verification', 'Gated access for IU students only.', 'home'],
+    ['01', 'Campus email verification', 'Gated access for verified students only.', 'home'],
     ['02', 'Task posting form', 'Title, category, place, deadline and pay.', 'post'],
     ['03', 'Task feed and filters', 'Browse by category and distance.', 'feed'],
     ['04', 'Messaging and status', 'Chat, pickup codes and a live tracker.', 'messages'],
@@ -138,11 +138,11 @@ export const Landing = ({ user, profile, onProfileSaved, go, signOut }) => {
         h(PatternWaves, { preset: 'ocean', color: '#e865b8', backgroundColor: '#ffffff', fade: 'edges', fadeSize: 0.45, cursorSize: 60 })),
       h('div', { className: 'wrap hero-in' },
         h('div', null,
-          h('div', { className: 'hero-affil rise' }, h('span', { className: 'iu-badge' }, 'IU'), 'Indiana University | Sigma Eta Pi Case Competition'),
+          h('div', { className: 'hero-affil rise' }, 'Verified campus task marketplace'),
           h('h1', { className: 'wordmark rise', style: { '--i': 1 } }, h(Logo, { size: 'clamp(76px, 13vw, 168px)' })),
           h('div', { className: 'tagline rise', style: { '--i': 2 } },
             h(TrueFocus, { sentence: 'Your Campus. Your Hustle.', borderColor: '#d1409c', blurAmount: 3, animationDuration: 0.6, pauseBetweenAnimations: 1.2, cornerSize: 14, borderWidth: 3 })),
-          h('p', { className: 'hero-sub rise', style: { '--i': 3 } }, 'A verified marketplace where IU students post one-time tasks and fellow students claim them for flexible pay.'),
+          h('p', { className: 'hero-sub rise', style: { '--i': 3 } }, 'A verified marketplace where students post one-time tasks and fellow students claim them for flexible pay.'),
           h(VerifyCard, { user, profile, onProfileSaved, go, signOut })),
         h('div', { className: 'card-stage rise', style: { '--i': 3 } }, h(StudentCard, { user })))),
     h('div', { className: 'wrap' },
@@ -188,5 +188,5 @@ export const Landing = ({ user, profile, onProfileSaved, go, signOut }) => {
         h('h2', null, 'Five features. One complete journey.'),
         h('div', { className: 'mvp-grid' }, mvp.map(([k, t, d, to]) =>
           h('button', { key: k, className: 'mvp', onClick: () => go(to) }, h('span', { className: 'k' }, k), h('h4', null, t), h('p', null, d), h('span', { className: 'go' }, 'Try it', h(Icon, { name: 'arrow' })))))),
-      h('footer', { className: 'foot' }, h(Logo, { size: 22 }), h('span', null, 'Indiana University | Sigma Eta Pi Case Competition'), h('span', null, 'Your Campus. Your Hustle.'))));
+      h('footer', { className: 'foot' }, h(Logo, { size: 22 }), h('span', null, 'Your Campus. Your Hustle.'))));
 };

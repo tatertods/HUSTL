@@ -25,7 +25,7 @@ export const Feed = ({ tasks, user, onRequest, go }) => {
   const mine = open && user && open.posterId === user.id && !open.isSample;
   return h('main', { className: 'view wrap' },
     h('div', { className: 'phead' },
-      h('div', null, h('div', { className: 'eyebrow' }, 'Marketplace'), h('h1', null, 'Tasks around campus'), h('p', null, 'Everything here is posted by a verified IU student. Pay, place and deadline are clear before you request.')),
+      h('div', null, h('div', { className: 'eyebrow' }, 'Marketplace'), h('h1', null, 'Tasks around campus'), h('p', null, 'Everything here is posted by a verified student. Pay, place and deadline are clear before you request.')),
       h('div', { className: 'metrics' },
         h('div', { className: 'spot metric' }, h('b', null, tasks.length), h('span', null, 'Open tasks')),
         h('div', { className: 'spot metric' }, h('b', null, money(avg)), h('span', null, 'Average pay')),

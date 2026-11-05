@@ -47,7 +47,7 @@ export const PostTask = ({ user, onPublish, toast }) => {
           show('desc') ? h('p', { className: 'err' }, show('desc')) : null),
         h('div', { className: 'two-in' },
           h('div', null, h('label', { className: 'lab', htmlFor: 'f-loc' }, 'Location'),
-            h('input', { id: 'f-loc', className: 'input', list: 'locs', placeholder: 'Wright Quad, SRSC...', value: f.loc, 'aria-invalid': show('loc') ? 'true' : undefined, onChange: e => set('loc', e.target.value) }),
+            h('input', { id: 'f-loc', className: 'input', list: 'locs', placeholder: 'Main Library, Student Union...', value: f.loc, 'aria-invalid': show('loc') ? 'true' : undefined, onChange: e => set('loc', e.target.value) }),
             h('datalist', { id: 'locs' }, LOCATIONS.map(l => h('option', { key: l, value: l }))),
             show('loc') ? h('p', { className: 'err' }, show('loc')) : null),
           h('div', null, h('label', { className: 'lab', htmlFor: 'f-dl' }, 'Deadline'),

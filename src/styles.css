@@ -108,7 +108,6 @@ h1,h2,h3{font-family:var(--f-display);letter-spacing:-.03em;text-wrap:balance}
 .hero-waves{position:absolute;inset:0;z-index:-1;opacity:.5;mix-blend-mode:multiply;pointer-events:auto}
 .hero-in{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:40px;align-items:center;padding-block:56px 72px}
 .hero-affil{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--ink-2);padding:7px 14px 7px 8px;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:999px;backdrop-filter:blur(8px)}
-.iu-badge{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:#990000;color:#fff;font-weight:800;font-size:11px;letter-spacing:-.02em}
 .wordmark{margin-top:22px;line-height:1;font-weight:800}
 .tagline{margin-top:18px;min-height:78px;display:flex;align-items:center}
 .tagline .focus-container{justify-content:flex-start;gap:.5em;row-gap:.1em;padding:10px 14px}

@@ -26,7 +26,7 @@ export const Header = ({ view, go, user }) => {
         h('span', { className: 'tab-pill', style: { transform: `translateX(${pill.x}px)`, width: pill.w } }),
         items.map(([id, label]) => h('button', { key: id, className: 'tab', 'aria-current': view === id ? 'page' : undefined, onClick: () => go(id) }, label))),
       h('button', { className: 'vchip', 'data-on': !!user, onClick: () => go('home'), title: user ? user.email : 'Verify your campus email' },
-        h('i'), user ? 'Verified IU student' : 'Verify with @iu.edu'))
+        h('i'), user ? 'Verified student' : 'Verify your email'))
   );
 };
 
@@ -40,7 +40,7 @@ export const TaskCard = ({ task, onOpen, preview, index = 0 }) =>
       h('span', null, h(Icon, { name: 'pin' }), task.loc || 'Add a location', task.dist != null ? ` · ${task.dist} mi` : ''),
       h('span', null, h(Icon, { name: 'clock' }), task.deadline)),
     h('div', { className: 'task-foot' },
-      h('div', { className: 'poster' }, h('span', { className: 'avatar' }, initials(task.poster)), h('span', null, task.poster), h('span', { className: 'vtick', title: 'Verified IU student' }, h(Icon, { name: 'check', strokeWidth: 3 }))),
+      h('div', { className: 'poster' }, h('span', { className: 'avatar' }, initials(task.poster)), h('span', null, task.poster), h('span', { className: 'vtick', title: 'Verified student' }, h(Icon, { name: 'check', strokeWidth: 3 }))),
       preview ? h('span', { className: 'pill' }, task.ago) : h('button', { className: 'btn btn-dark btn-sm', onClick: () => onOpen(task) }, 'Details & Request', h(Icon, { name: 'arrow' }))));
 
 const Silhouette = () => h('svg', { viewBox: '0 0 120 120', 'aria-hidden': 'true' },
@@ -56,10 +56,10 @@ export const StudentCard = ({ user, stats, width = 340, height = 460 }) => {
     h('div', { className: 'idc-avatar' }, h(Silhouette)),
     h('div', { className: 'reflective-card__identity' },
       h('h3', { className: 'reflective-card__name' }, name),
-      h('p', { className: 'reflective-card__role' }, 'Indiana University, Bloomington')),
+      h('p', { className: 'reflective-card__role' }, 'Verified campus student')),
     stats ? h('div', { className: 'idc-stats' }, [['Jobs', String(stats.jobs)], ['Earned', '$' + Math.round(stats.earned)], ['Rating', stats.reviews ? stats.rating.toFixed(1) : 'New']].map(([k, v]) => h('div', { key: k }, h('b', null, v), h('span', null, k)))) : null,
     h('div', { className: 'reflective-card__footer' },
-      h('div', { className: 'reflective-card__id' }, h('span', { className: 'reflective-card__label' }, 'Campus email'), h('span', { className: 'reflective-card__value' }, user ? user.email : 'you@iu.edu')),
+      h('div', { className: 'reflective-card__id' }, h('span', { className: 'reflective-card__label' }, 'Campus email'), h('span', { className: 'reflective-card__value' }, user ? user.email : 'you@campus.edu')),
       h('span', { className: 'reflective-card__tile' }, h(Icon, { name: 'fingerprint', size: 22, strokeWidth: 1.6 }))));
   return h(ReflectiveCard, {
     children: content, statusColor: user ? '#10b981' : '#f29a4f', width, height, radius: 30, theme: 'light',
@@ -69,5 +69,5 @@ export const StudentCard = ({ user, stats, width = 340, height = 460 }) => {
 
 export const GateCard = ({ go, text }) =>
   h('main', { className: 'view wrap' },
-    h('div', { className: 'phead' }, h('div', null, h('div', { className: 'eyebrow' }, 'Students only'), h('h1', null, 'Verify to continue'), h('p', null, text || 'Hustl. is open to verified Indiana University students. It takes under a minute.'))),
-    h('div', null, h('button', { className: 'btn btn-grad', onClick: () => go('home') }, 'Verify with my @iu.edu email', h(Icon, { name: 'arrow' }))));
+    h('div', { className: 'phead' }, h('div', null, h('div', { className: 'eyebrow' }, 'Students only'), h('h1', null, 'Verify to continue'), h('p', null, text || 'Hustl. is open to verified college students. It takes under a minute.'))),
+    h('div', null, h('button', { className: 'btn btn-grad', onClick: () => go('home') }, 'Verify with my campus email', h(Icon, { name: 'arrow' }))));

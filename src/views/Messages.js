@@ -96,7 +96,7 @@ export const Messages = ({ user, mine, selectedId, setSelectedId, toast, refresh
       h('section', { className: 'card chat', 'aria-label': 'Chat' },
         h('div', { className: 'chat-head' },
           h('span', { className: 'avatar' }, initials(other || '?')),
-          h('div', { className: 't' }, h('b', null, other || 'No student yet', other ? h('span', { className: 'vtick' }, h(Icon, { name: 'check', strokeWidth: 3 })) : null), h('span', { className: 's' }, `Verified IU student · ${task.loc || 'location to be agreed'}`)),
+          h('div', { className: 't' }, h('b', null, other || 'No student yet', other ? h('span', { className: 'vtick' }, h(Icon, { name: 'check', strokeWidth: 3 })) : null), h('span', { className: 's' }, `Verified student · ${task.loc || 'location to be agreed'}`)),
           h(CatPill, { cat: task.cat })),
         h('div', { className: 'thread', ref: threadEl, 'aria-live': 'polite' },
           h('div', { className: 'sys' }, h(Icon, { name: 'bolt', size: 13 }), `Task posted: "${task.title}"`),
