@@ -1,6 +1,15 @@
 -- Sample tasks so the feed is not empty during the demo.
 -- Run this AFTER you have signed in once on the live site (it needs one profile to own the rows).
 -- They are marked is_sample, so even their owner can request them for testing.
+-- Make sure every signed-up account has a profile row (fixes "could not publish" for older accounts).
+insert into public.profiles (id, full_name)
+select u.id, initcap(regexp_replace(split_part(u.email, '@', 1), '[0-9]+|[._-]+', ' ', 'g'))
+from auth.users u
+where not exists (select 1 from public.profiles p where p.id = u.id);
+
+-- Remove old sample rows so running this twice does not duplicate them.
+delete from tasks where is_sample;
+
 insert into tasks (poster_id, poster_name, title, description, category, location, deadline, pay, is_sample)
 select p.id, v.poster_name, v.title, v.description, v.category, v.location, v.deadline, v.pay, true
 from (select id from profiles order by created_at limit 1) p,
