@@ -1,7 +1,7 @@
 import { h, useState, useEffect, useRef } from '../lib/base.js';
 import { Icon } from '../components/Icon.js';
 import { CatPill } from '../components/Common.js';
-import { PeekRating, SlideCommit } from '../components/UiBits.js';
+import { PeekRating } from '../components/UiBits.js';
 import { api, subscribeMessages, STEPS, STATUS_STEP, money, moneyShort, feeOf, initials, clock } from '../lib/data.js';
 
 const Stepper = ({ step }) =>
@@ -116,11 +116,11 @@ export const Messages = ({ user, mine, selectedId, setSelectedId, toast, refresh
           h('div', { style: { marginTop: 8 } },
             h('div', { className: 'esc-row' }, h('span', null, 'Worker earns'), h('b', null, money(pay))),
             h('div', { className: 'esc-row' }, h('span', null, 'Hustl. fee (10%, paid by requester)'), h('b', null, money(fee))),
-            h('div', { className: 'esc-row hl' }, h('span', null, 'Requester pays in total'), h('b', null, money(total)))),
+            h('div', { className: 'esc-row hl' }, h('span', null, 'Requester funded in total'), h('b', null, money(total)))),
           h('p', { className: 'hint' }, 'Pilot note: Hustl. records the amounts and the release, but no money moves through the app yet. Settle up directly after the task.'),
-          task.status === 'completed' && isPoster ? h('div', { className: 'slide-zone' },
-            h(SlideCommit, { label: 'Slide to release payment', doneLabel: 'Released', errorLabel: 'Could not release', onConfirm: release, trackColor: '#111827', handleColor: '#ffffff', successColor: '#10b981', width: 300, height: 58, radius: 29, holdMs: 0, disabled: task.paid }),
-            h('p', null, task.paid ? 'Marked as paid.' : 'Confirm the task was done to release the escrow.')) : null,
+          task.status === 'completed' && isPoster && !task.paid ? h('div', { className: 'slide-zone' },
+            h('button', { className: 'btn btn-grad', onClick: release }, 'Confirm job done and release to worker', h(Icon, { name: 'check' })),
+            h('p', null, 'The escrow you funded when posting goes to the worker.')) : null,
           task.paid ? h('div', null,
             h('div', { className: 'receipt' },
               h('span', { className: 'eyebrow' }, 'Payment confirmed'),

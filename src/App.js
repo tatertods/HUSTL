@@ -103,9 +103,11 @@ export const App = () => {
       const t = await api.createTask(uid, user.name, f);
       await refresh();
       setSelectedId(t.id);
-      toast('Task published to the feed');
+      toast('Escrow funded. Task posted to the feed');
+      await new Promise(r => setTimeout(r, 900));
       go('messages');
-    } catch (err) { console.error(err); toast('Could not publish: ' + ((err && err.message) || 'unknown error')); }
+      return true;
+    } catch (err) { console.error(err); toast('Could not publish: ' + ((err && err.message) || 'unknown error')); return false; }
   };
   const signOut = async () => { if (supabase) await supabase.auth.signOut(); toast('Signed out'); go('home'); };
 

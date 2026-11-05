@@ -3,6 +3,7 @@ import { Icon } from '../components/Icon.js';
 import { CatPill, TaskCard } from '../components/Common.js';
 import { CATS, POST_ORDER, LOCATIONS, DEADLINES, money, feeOf } from '../lib/data.js';
 import { useCountUp } from '../lib/hooks.js';
+import { SlideCommit } from '../components/UiBits.js';
 
 export const PostTask = ({ user, onPublish, toast }) => {
   const [f, setF] = useState({ title: '', cat: 'pickup', desc: '', loc: '', deadline: DEADLINES[1], pay: '15' });
@@ -30,6 +31,12 @@ export const PostTask = ({ user, onPublish, toast }) => {
     setBusy(true);
     await onPublish({ cat: f.cat, title: f.title.trim(), desc: f.desc.trim(), loc: f.loc.trim(), deadline: f.deadline, pay: payNum });
     setBusy(false);
+  };
+  const slidePost = async () => {
+    setTried(true);
+    if (bad) { toast('Fill in the highlighted fields'); throw new Error('invalid'); }
+    const ok = await onPublish({ cat: f.cat, title: f.title.trim(), desc: f.desc.trim(), loc: f.loc.trim(), deadline: f.deadline, pay: payNum });
+    if (!ok) throw new Error('publish failed');
   };
   const show = k => (tried && errs[k] ? errs[k] : '');
   const preview = { cat: f.cat, title: f.title.trim(), desc: f.desc.trim(), loc: f.loc.trim(), dist: null, deadline: f.deadline, pay, poster: user ? user.name : 'You', ago: 'Preview' };
@@ -61,8 +68,10 @@ export const PostTask = ({ user, onPublish, toast }) => {
           h('h3', null, 'Fee breakdown'),
           h('div', { className: 'row' }, h('span', null, 'Worker earns'), h('b', null, money(payShown))),
           h('div', { className: 'row' }, h('span', null, 'Hustl. fee (10%)'), h('b', null, money(feeShown))),
-          h('div', { className: 'tot' }, h('span', null, 'You pay'), h('b', null, money(total))),
-          h('p', { className: 'tiny' }, 'Posting is free during the pilot. The service fee is tracked with the task and counted when it is completed.')),
+          h('div', { className: 'tot' }, h('span', null, 'You fund in escrow'), h('b', null, money(total))),
+          h('p', { className: 'tiny' }, 'Slide below to fund the escrow and post your task. The worker is paid from it when the job is done. Pilot note: no real money moves yet.')),
         h('div', null, h('div', { className: 'preview-label' }, 'Live preview'), h(TaskCard, { task: preview, preview: true })),
-        h('button', { className: 'btn btn-grad', type: 'submit', disabled: busy }, busy ? 'Publishing...' : 'Publish task', busy ? null : h(Icon, { name: 'bolt' })))));
+        h('div', { className: 'slide-zone' },
+          h(SlideCommit, { label: 'Slide to fund and post', doneLabel: 'Posted', errorLabel: 'Could not post', onConfirm: slidePost, trackColor: '#111827', handleColor: '#ffffff', successColor: '#10b981', width: 320, height: 60, radius: 30, holdMs: 0 }),
+          h('p', null, 'You pay ' + money(pay + fee) + ' into escrow. ' + money(pay) + ' goes to the worker.')))));
 };
